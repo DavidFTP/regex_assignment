@@ -7,7 +7,8 @@ import java.io.IOException;
 class TOC {
     public static void main(String[] args) {
         try (BufferedReader reader = new BufferedReader(
-                new FileReader("D:\\College\\Year 4\\Second term\\Computation Theory\\Assignment 1\\input.txt"))) {
+                new FileReader(
+                        "D:\\College\\Year 4\\Second term\\Computation Theory\\regex_assignment\\Assignment 1\\input.txt"))) {
             String line;
             int pNumber;
 
@@ -53,7 +54,7 @@ class TOC {
                 eight(s);
                 break;
             case 9:
-                nine("D:\\College\\Year 4\\Second term\\Computation Theory\\Assignment 1\\input.txt");
+                nine("D:\\College\\Year 4\\Second term\\Computation Theory\\regex_assignment\\Assignment 1\\input.txt");
                 break;
             case 10:
                 ten(s);
