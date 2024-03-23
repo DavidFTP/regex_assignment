@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
@@ -6,6 +8,7 @@ import java.io.IOException;
 
 class TOC {
     public static String filePath = "D:\\College\\Year 4\\Second term\\Computation Theory\\regex_assignment\\Assignment 1\\input.txt";
+    public static String problem9 = "D:\\College\\Year 4\\Second term\\Computation Theory\\regex_assignment\\Assignment 1\\problem9file.txt";
 
     public static void main(String[] args) {
         try (BufferedReader reader = new BufferedReader(
@@ -56,7 +59,7 @@ class TOC {
                 eight(s);
                 break;
             case 9:
-                nine(filePath);
+                nine(problem9);
                 break;
             case 10:
                 ten(s);
@@ -157,46 +160,48 @@ class TOC {
 
     public static void nine(String filePath) {
         System.out.println("*problem9file.txt*");
-        String regex = "(https?://\\S+)";
+        String regex = "\\b(https?):/\\S+\\b";
 
-        // Compile the regex pattern
-        Pattern urlPattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(regex);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
+            int lineNumber = 0;
             int urlCount = 0;
 
-            // First loop to find the number of URLs in the file
+            List<String> links = new ArrayList<>();
+            List<Integer> lines = new ArrayList<>();
+            List<Integer> startIndecies = new ArrayList<>();
+            List<Integer> endIndecies = new ArrayList<>();
+
+            // Loop through the lines of the file
             while ((line = reader.readLine()) != null) {
-                Matcher urlMatcher = urlPattern.matcher(line);
-                while (urlMatcher.find()) {
+                lineNumber++;
+
+                // Create a matcher for the current line
+                Matcher matcher = pattern.matcher(line);
+
+                // Find and print URLs in the current line
+                while (matcher.find()) {
                     urlCount++;
+                    String url = matcher.group();
+                    links.add(url);
+                    lines.add(lineNumber);
+                    int startIndex = matcher.start();
+                    startIndecies.add(startIndex);
+                    int endIndex = matcher.end();
+                    endIndecies.add(endIndex);
                 }
             }
-            System.out.println("Number of URlLs: " + urlCount);
-            // Reset reader
-            reader.close();
-            try (BufferedReader newReader = new BufferedReader(new FileReader(filePath))) {
-                int lineNumber = 0;
-
-                // Second loop to extract everything else except URLs
-                while ((line = newReader.readLine()) != null) {
-                    lineNumber++;
-
-                    // Create a matcher for the current line
-                    Matcher matcher = urlPattern.matcher(line);
-
-                    // Find and print URLs in the current line
-                    while (matcher.find()) {
-                        String url = matcher.group();
-                        int startIndex = matcher.start();
-                        int endIndex = matcher.end();
-
-                        System.out.println("URL: " + url);
-                        System.out.println("Line number: " + lineNumber);
-                        System.out.println("Start index: " + startIndex + ", End index: " + endIndex);
-                    }
+            System.out.println("Number of URLs found: " + urlCount);
+            if (urlCount > 0) {
+                for (int i = 0; i < urlCount; i++) {
+                    System.out.println("URL: " + links.get(i));
+                    System.out.println("Line: " + lines.get(i));
+                    System.out.println("start index: " + startIndecies.get(i) + ", end index: " + endIndecies.get(i));
                 }
+            } else {
+                System.out.println("No URLs found in the text.");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -204,10 +209,13 @@ class TOC {
     }
 
     public static void ten(String s) {
-        String regex = "^([-+]?(?:\\d*\\.\\d+|\\d+|\\w+))\\s*([-+/]\\s([-+]?(?:\\d*\\.\\d+|\\d+|\\w+)))\\s=\\s*([-+]?(?:\\d*\\.\\d+|\\d+|\\w+))\\s*([-+/]\\s([-+]?(?:\\d*\\.\\d+|\\d+|\\w+)))*$";
+        String regex = "^([-+]?\\d*\\.?\\d*([a-zA-Z]+)?([-+*/]))*([-+]?\\d*\\.?\\d*([a-zA-Z]+)?)?=(?:([-+]?\\d*\\.?\\d*([a-zA-Z]+)?([-+*/]))*([-+]?\\d*\\.?\\d*([a-zA-Z]+)?)?)?$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(s);
         // System.out.println(s);
-        System.out.println(matcher.matches() ? "valid mathematical expression" : "invalid mathematical expression");
+        if (!s.startsWith("=") && !s.endsWith("="))
+            System.out.println(matcher.matches() ? "valid mathematical expression" : "invalid mathematical expression");
+        else
+            System.out.println("invalid mathematical expression");
     }
 }
