@@ -5,10 +5,12 @@ import java.io.FileReader;
 import java.io.IOException;
 
 class TOC {
+    public static String filePath = "D:\\College\\Year 4\\Second term\\Computation Theory\\regex_assignment\\Assignment 1\\input.txt";
+
     public static void main(String[] args) {
         try (BufferedReader reader = new BufferedReader(
                 new FileReader(
-                        "D:\\College\\Year 4\\Second term\\Computation Theory\\regex_assignment\\Assignment 1\\input.txt"))) {
+                        filePath))) {
             String line;
             int pNumber;
 
@@ -54,7 +56,7 @@ class TOC {
                 eight(s);
                 break;
             case 9:
-                nine("D:\\College\\Year 4\\Second term\\Computation Theory\\regex_assignment\\Assignment 1\\input.txt");
+                nine(filePath);
                 break;
             case 10:
                 ten(s);
@@ -109,7 +111,21 @@ class TOC {
     }
 
     public static void seven(String s) {
-        System.out.println("Not solved yet");
+        String regex = "((aa)*ab(bb)*((aa)*a)*)|((bb)*ba(aa)*((bb)*b)*)|((aa)*((bb)*b)((aa)*a))";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(s);
+        int count = 0;
+
+        while (matcher.find()) {
+            count++;
+        }
+        matcher.reset();
+        System.err.println("*" + s + "*");
+        System.out.println("Number of matched substrings: " + count);
+        while (matcher.find()) {
+            System.out.println("Matched substring: " + matcher.group() + " Start index: " + matcher.start()
+                    + " End index: " + (matcher.end()));
+        }
     }
 
     public static void eight(String s) {
@@ -188,8 +204,8 @@ class TOC {
     }
 
     public static void ten(String s) {
-        String reg = "^[+-]?(?:\\d*\\.?\\d*[a-zA-Z]|\\d+\\.\\d+|\\d+)(?:[+\\-/][+-]?(?:\\d\\.?\\d*[a-zA-Z]|\\d+\\.\\d+|\\d+))=[+-]?(?:\\d\\.?\\d*[a-zA-Z]|\\d+\\.\\d+|\\d+)(?:[+\\-/][+-]?(?:\\d\\.?\\d*[a-zA-Z]|\\d+\\.\\d+|\\d+))*$";
-        Pattern pattern = Pattern.compile(reg);
+        String regex = "^([-+]?(?:\\d*\\.\\d+|\\d+|\\w+))\\s*([-+/]\\s([-+]?(?:\\d*\\.\\d+|\\d+|\\w+)))\\s=\\s*([-+]?(?:\\d*\\.\\d+|\\d+|\\w+))\\s*([-+/]\\s([-+]?(?:\\d*\\.\\d+|\\d+|\\w+)))*$";
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(s);
         // System.out.println(s);
         System.out.println(matcher.matches() ? "valid mathematical expression" : "invalid mathematical expression");
